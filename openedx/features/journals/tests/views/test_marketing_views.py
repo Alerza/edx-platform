@@ -72,20 +72,9 @@ class JournalMarketingViewTest(CacheIsolationTestCase, SiteMixin):
             kwargs={'bundle_uuid': "4837728d-6dab-458b-9e3f-3e799cfdc31c"}
         )
 
-
-    # @mock.patch.dict(settings.FEATURES, {"ENABLE_JOURNAL_INTEGRATION": True})
-    # @mock.patch('openedx.features.journals.api.get_journal_bundles')
-    # def test_with_empty_data(self, mock_journal_bundles):
-    #     mock_journal_bundles.return_value = []
-    #     response = self.client.get(path=reverse(
-    #         "openedx.journals.bundle_about",
-    #         kwargs={'bundle_uuid': "4837728d-6dab-458b-9e3f-3e799cfdc31c"}
-    #     ))
-    #     self.assertEqual(response.status_code, 404)
-
     @mock.patch.dict(settings.FEATURES, {"ENABLE_JOURNAL_INTEGRATION": True})
     @mock.patch('openedx.features.journals.api.DiscoveryApiClient.get_journal_bundles')
-    def test_with_empthy_data(self, mock_bundles):
+    def test_with_empty_data(self, mock_bundles):
         mock_bundles.return_value = []
         response = self.client.get(path=self.path)
         self.assertEqual(response.status_code, 404)
@@ -93,7 +82,7 @@ class JournalMarketingViewTest(CacheIsolationTestCase, SiteMixin):
     @mock.patch.dict(settings.FEATURES, {"ENABLE_JOURNAL_INTEGRATION": True})
     @mock.patch('openedx.features.journals.views.marketing.get_pricing_data')
     @mock.patch('openedx.features.journals.api.DiscoveryApiClient.get_journal_bundles')
-    def test_with_empthy_data(self, mock_bundles, mock_pricing_data):
+    def test_with_valid_data(self, mock_bundles, mock_pricing_data):
         mock_pricing_data.return_value = get_mocked_pricing_data()
         mock_bundles.return_value = get_mocked_journal_data()
         response = self.client.get(path=self.path)
